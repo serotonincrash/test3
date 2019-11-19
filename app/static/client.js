@@ -19,9 +19,5 @@ function analyze() {
     }
     el("analyze-button").innerHTML = "Analyze";
   };
-
-  var fileData = new FormData();
-  fileData.append("file", uploadFiles[0]);
-  xhr.send(fileData);
 }
 
