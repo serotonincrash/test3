@@ -56,10 +56,14 @@ async def homepage(request):
 
 @app.route('/analyze', methods=['POST'])
 async def analyze(request):
-    prediction = request.body
+    req = await request.form
+    dict = red.to_dict()
+    prediction = dict['enteredText']
+    
     return JSONResponse({'result': prediction})
 
 
 if __name__ == '__main__':
     if 'serve' in sys.argv:
         uvicorn.run(app=app, host='0.0.0.0', port=5000, log_level="info")
+
