@@ -10,14 +10,23 @@ from starlette.responses import HTMLResponse, JSONResponse
 from starlette.staticfiles import StaticFiles
 
 export_file_url = 'https://www.dropbox.com/s/6bgq8t6yextloqp/export.pkl?raw=1'
-export_file_name = 'export.pkl'
+export_file_name = 'fine_tuned_enc.pth'
 
 path = Path(__file__).parent
+export_file_url = "https://www.dropbox.com/s/apu0seqcmuy6rpp/fine_tuned_enc.pth?dl=1"
+
 
 app = Starlette()
 app.add_middleware(CORSMiddleware, allow_origins=['*'], allow_headers=['X-Requested-With', 'Content-Type'])
 app.mount('/static', StaticFiles(directory='app/static'))
 
+async def download_file(url, dest):
+    if dest.exists(): return
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+            data = await response.read()
+            with open(dest, 'wb') as f:
+                f.write(data)
 
 async def download_file(url, dest):
     if dest.exists(): return
@@ -58,10 +67,9 @@ async def homepage(request):
 async def analyze(request):
     req = await request.form()
     TEXT = req['entered-text']
-    N_WORDS = 300
+    N_WORDS = 100
     N_SENTENCES = 1
-
-    prediction = TEXT
+    prediction = TEXT + "\n".join(learn.predict(TEXT, N_WORDS, temperature=1) for _ in range(N_SENTENCES))
     return JSONResponse({'result': prediction})
 
 
