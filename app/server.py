@@ -22,6 +22,16 @@ class TempModel(nn.Module):
         self.conv2 = nn.Conv2d(20, 20, 5)    # Add key conv2 to self._modules 
     def forward(self, inp):
         return self.conv1(inp)
+    def load_my_state_dict(self, state_dict):
+    
+        own_state = self.state_dict()
+        for name, param in state_dict.items():
+            if name not in own_state:
+                continue
+            if isinstance(param, Parameter):
+                # backwards compatibility for serialized parameters
+                param = param.data
+            own_state[name].copy_(param)
 
 
 app = Starlette()
