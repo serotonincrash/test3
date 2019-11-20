@@ -12,6 +12,8 @@ export_file_url = 'https://www.dropbox.com/s/6bgq8t6yextloqp/export.pkl?raw=1'
 export_file_name = 'export.pkl'
 data_file_url = 'https://www.dropbox.com/s/r8slnh3qc2bmvlj/data_lm.pkl?raw=1'
 data_file_name = 'data_lm.pkl'
+model_file_url = 'https://www.dropbox.com/s/x2tof9fa7mhspjo/fine_tuned_enc.pth?dl=1'
+model_file_name = 'fine_tuned_enc.pth'
 path = Path(__file__).parent
 
 
@@ -30,9 +32,10 @@ async def download_file(url, dest):
 async def setup_learner():
     await download_file(export_file_url, path / export_file_name)
     await download_file(data_file_url, path / data_file_name)
+    await download_file(model_file_url, path / model_file_name)
     data_lm = load_data(path, file='data_lm.pkl')
     try:
-        model = load_learner(path, export_file_name)
+        model = 
         learn = LanguageLearner(data_lm, model)
         return learn
     except RuntimeError as e:
