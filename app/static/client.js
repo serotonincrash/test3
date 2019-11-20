@@ -7,6 +7,7 @@ function analyze() {
   el("analyze-button").innerHTML = "Analyzing...";
   var xhr = new XMLHttpRequest();
   var loc = window.location;
+  let formData = FormData(el(enteredText))
   xhr.open("POST", `${loc.protocol}//${loc.hostname}:${loc.port}/analyze`,
     true);
   xhr.onerror = function() {
@@ -21,5 +22,5 @@ function analyze() {
     }
     el("analyze-button").innerHTML = "Analyze";
   };
-  xhr.send()
+  xhr.send(formData)
 }
