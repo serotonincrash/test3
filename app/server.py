@@ -29,8 +29,9 @@ async def download_file(url, dest):
 
 async def setup_learner():
     await download_file(export_file_url, path / export_file_name)
+    learn = Learner()
     try:
-        learn = torch.load_encoder('fine_tuned_enc')
+        learn = torch.load(path / 'fine_tuned_enc')
         return learn
     except RuntimeError as e:
         if len(e.args) > 0 and 'CPU-only machine' in e.args[0]:
