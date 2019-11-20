@@ -18,7 +18,7 @@ export_file_url = "https://www.dropbox.com/s/apu0seqcmuy6rpp/fine_tuned_enc.pth?
 app = Starlette()
 app.add_middleware(CORSMiddleware, allow_origins=['*'], allow_headers=['X-Requested-With', 'Content-Type'])
 app.mount('/static', StaticFiles(directory='app/static'))
-
+defaults.device = 'cpu'
 async def download_file(url, dest):
     if dest.exists(): return
     async with aiohttp.ClientSession() as session:
