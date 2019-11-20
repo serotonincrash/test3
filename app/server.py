@@ -18,7 +18,7 @@ path = Path(__file__).parent
 app = Starlette()
 app.add_middleware(CORSMiddleware, allow_origins=['*'], allow_headers=['X-Requested-With', 'Content-Type'])
 app.mount('/static', StaticFiles(directory='app/static'))
-defaults.device = 'cpu'
+defaults.device = torch.device('cpu')
 async def download_file(url, dest):
     if dest.exists(): return
     async with aiohttp.ClientSession() as session:
@@ -30,7 +30,7 @@ async def download_file(url, dest):
 async def setup_learner():
     await download_file(export_file_url, path / export_file_name)
     try:
-        learn = load_learner(path, export_file_name, cpu = True)
+        learn = load_learner(path, export_file_name)
         return learn
     except RuntimeError as e:
         if len(e.args) > 0 and 'CPU-only machine' in e.args[0]:
