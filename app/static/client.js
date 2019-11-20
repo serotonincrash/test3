@@ -8,7 +8,7 @@ function analyze() {
   var xhr = new XMLHttpRequest();
   var loc = window.location;
   var enteredText = el("enteredText")
-  let formData = new FormData(el(enteredText))
+  let formData = new FormData(enteredText.id,enteredText.value)
   xhr.open("POST", `${loc.protocol}//${loc.hostname}:${loc.port}/analyze`,
     true);
   xhr.onerror = function() {
