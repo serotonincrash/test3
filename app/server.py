@@ -10,17 +10,15 @@ from starlette.responses import HTMLResponse, JSONResponse
 from starlette.staticfiles import StaticFiles
 from torch import nn as nn
 export_file_url = 'https://www.dropbox.com/s/6bgq8t6yextloqp/export.pkl?raw=1'
-export_file_name = 'fine_tuned_enc.pth'
+export_file_name = 'export.pkl'
 
 path = Path(__file__).parent
-export_file_url = "https://www.dropbox.com/s/jr7s6aq66ci2t0k/export.pkl?dl=1"
 
 
 app = Starlette()
 app.add_middleware(CORSMiddleware, allow_origins=['*'], allow_headers=['X-Requested-With', 'Content-Type'])
 app.mount('/static', StaticFiles(directory='app/static'))
 defaults.device = 'cpu'
-torch.cuda.set_device('cpu')
 async def download_file(url, dest):
     if dest.exists(): return
     async with aiohttp.ClientSession() as session:
@@ -30,7 +28,7 @@ async def download_file(url, dest):
                 f.write(data)
 
 async def setup_learner():
-    await download_file(export_file_url, path / export_file_name)
+    await download_file(export_file_url, path / export_file_name, cpu = True)
     try:
         learn = load_learner(path, export_file_name)
         return learn
