@@ -17,7 +17,7 @@ export_file_url = "https://www.dropbox.com/s/apu0seqcmuy6rpp/fine_tuned_enc.pth?
 
 class TempModel(nn.Module):
     def __init__(self):
-        super(CustomModule, self).__init__() # Initialize self._modules as OrderedDict
+        super(TempModel, self).__init__() # Initialize self._modules as OrderedDict
         self.conv1 = nn.Conv2d(1, 20, 5)     # Add key conv1 to self._modules
         self.conv2 = nn.Conv2d(20, 20, 5)    # Add key conv2 to self._modules 
     def forward(self, inp):
