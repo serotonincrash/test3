@@ -2,12 +2,11 @@ var el = x => document.getElementById(x);
 
 
 function analyze() {
-  alert("button pressed!")
 
-  el("analyze-button").innerHTML = "Analyzing...";
+  el("analyze-button").innerHTML = "Generating...";
   var xhr = new XMLHttpRequest();
   var loc = window.location;
-  var enteredText = el("enteredText")
+  var enteredText = el("entered-text")
   let formData = new FormData()
   formData.append(enteredText.id,enteredText.value)
   xhr.open("POST", `${loc.protocol}//${loc.hostname}:${loc.port}/analyze`,
@@ -17,12 +16,10 @@ function analyze() {
   };
   xhr.onload = function(e) {
     if (this.readyState === 4) {
-		alert("the thing is done")
-        alert(e.target.response)
         var response = JSON.parse(e.target.response);
         el("result-label").innerHTML = `Result = ${response["result"]}`;
     }
-    el("analyze-button").innerHTML = "Analyze";
+    el("generate-button").innerHTML = "Generate";
   };
   xhr.send(formData)
 }
