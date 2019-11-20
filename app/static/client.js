@@ -20,5 +20,5 @@ function analyze() {
     }
     el("analyze-button").innerHTML = "Analyze";
   };
+  xhr.send()
 }
-
