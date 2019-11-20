@@ -13,25 +13,7 @@ export_file_url = 'https://www.dropbox.com/s/6bgq8t6yextloqp/export.pkl?raw=1'
 export_file_name = 'fine_tuned_enc.pth'
 
 path = Path(__file__).parent
-export_file_url = "https://www.dropbox.com/s/apu0seqcmuy6rpp/fine_tuned_enc.pth?dl=1"
-
-class TempModel(nn.Module):
-    def __init__(self):
-        super(TempModel, self).__init__() # Initialize self._modules as OrderedDict
-        self.conv1 = nn.Conv2d(1, 20, 5)     # Add key conv1 to self._modules
-        self.conv2 = nn.Conv2d(20, 20, 5)    # Add key conv2 to self._modules 
-    def forward(self, inp):
-        return self.conv1(inp)
-    def load_my_state_dict(self, state_dict):
-    
-        own_state = self.state_dict()
-        for name, param in state_dict.items():
-            if name not in own_state:
-                continue
-            if isinstance(param, Parameter):
-                # backwards compatibility for serialized parameters
-                param = param.data
-            own_state[name].copy_(param)
+export_file_url = "https://www.dropbox.com/s/jr7s6aq66ci2t0k/export.pkl?dl=1"
 
 
 app = Starlette()
@@ -49,9 +31,7 @@ async def download_file(url, dest):
 async def setup_learner():
     await download_file(export_file_url, path / export_file_name)
     try:
-        learn = TempModel()
-        learn.load_state_dict(TempModel.load_my_state_dict(self, torch.load(path / export_file_name, map_location='cpu')))
-        learn.eval()
+        learn = load_learner(path, export_file_name)
         return learn
     except RuntimeError as e:
         if len(e.args) > 0 and 'CPU-only machine' in e.args[0]:
