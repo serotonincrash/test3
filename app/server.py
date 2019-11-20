@@ -1,6 +1,7 @@
 import aiohttp
 import asyncio
 import uvicorn
+from fastai
 from fastai.text import *
 from io import BytesIO
 from starlette.applications import Starlette
@@ -58,8 +59,7 @@ async def analyze(request):
     TEXT = req['entered-text']
     N_WORDS = 45
     N_SENTENCES = 1
-    prediction = "\n".join(learn.predict(TEXT) for _ in range(N_SENTENCES))
-    print(prediction)
+    prediction = "\n" + learn.predict(TEXT, n_words = N_WORDS, temperature = 1.0)
     return JSONResponse({'result': str(prediction)})
 
 
