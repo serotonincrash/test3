@@ -9,7 +9,6 @@ from starlette.responses import HTMLResponse, JSONResponse
 from starlette.staticfiles import StaticFiles
 export_file_url = 'https://www.dropbox.com/s/6bgq8t6yextloqp/export.pkl?raw=1'
 export_file_name = 'export.pkl'
-del globals()["RNNLearner.TextClassifierLearner"]
 path = Path(__file__).parent
 
 
@@ -57,7 +56,7 @@ async def analyze(request):
     TEXT = req['entered-text']
     N_WORDS = 45
     N_SENTENCES = 1
-    prediction = TEXT + "\n".join(learn.predict(TEXT, N_WORDS, temperature = 1.0) for _ in range(N_SENTENCES))
+    prediction = TEXT + "\n".join(LanguageLearner(learn).predict(TEXT, N_WORDS, temperature = 1.0) for _ in range(N_SENTENCES))
     print(prediction)
     return JSONResponse({'result': str(prediction)})
 
