@@ -60,7 +60,7 @@ async def analyze(request):
     N_WORDS = 100
     N_SENTENCES = 1
     prediction = TEXT + "\n".join(learn.predict(TEXT, N_WORDS, temperature=1) for _ in range(N_SENTENCES))
-    return JSONResponse({'result': prediction})
+    return JSONResponse({'result': str(prediction)})
 
 
 if __name__ == '__main__':
