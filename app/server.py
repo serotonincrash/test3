@@ -56,8 +56,8 @@ async def homepage(request):
 
 @app.route('/analyze', methods=['POST'])
 async def analyze(request):
-    req = await request.form
-    dict = red.to_dict()
+    req = request.form
+    dict = req.to_dict()
     prediction = dict['enteredText']
     
     return JSONResponse({'result': prediction})
