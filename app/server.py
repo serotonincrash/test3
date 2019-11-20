@@ -57,9 +57,10 @@ async def homepage(request):
 async def analyze(request):
     req = await request.form()
     TEXT = req['entered-text']
-    N_WORDS = 100
+    N_WORDS = 45
     N_SENTENCES = 1
-    prediction = TEXT + "\n".join(learn.predict(TEXT, N_WORDS, temperature=1) for _ in range(N_SENTENCES))
+    prediction = TEXT + "\n".join(learn.predict(TEXT, N_WORDS, temperature=0.9) for _ in range(N_SENTENCES))
+    print(prediction)
     return JSONResponse({'result': str(prediction)})
 
 
