@@ -50,7 +50,7 @@ async def setup_learner():
     await download_file(export_file_url, path / export_file_name)
     try:
         learn = TempModel()
-        learn.load_state_dict(torch.load(path / export_file_name, map_location='cpu'))
+        learn.load_state_dict(TempModel.load_my_state_dict(self, torch.load(path / export_file_name, map_location='cpu')))
         learn.eval()
         return learn
     except RuntimeError as e:
