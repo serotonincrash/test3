@@ -1,7 +1,7 @@
 import aiohttp
 import asyncio
 import uvicorn
-from fastai import *
+import fastai
 from fastai.vision import *
 from io import BytesIO
 from starlette.applications import Starlette
