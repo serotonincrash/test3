@@ -57,10 +57,11 @@ async def homepage(request):
 @app.route('/analyze', methods=['POST'])
 async def analyze(request):
     req = await request.form()
-    TEXT = req['enteredText']
+    TEXT = req['entered-text']
     N_WORDS = 300
     N_SENTENCES = 1
-    prediction = "\n".join(learn.predict(TEXT, N_WORDS, temperature=0.7) for _ in range(N_SENTENCES)))
+
+    prediction = TEXT
     return JSONResponse({'result': prediction})
 
 
