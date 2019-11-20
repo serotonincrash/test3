@@ -10,8 +10,8 @@ from starlette.responses import HTMLResponse, JSONResponse
 from starlette.staticfiles import StaticFiles
 export_file_url = 'https://www.dropbox.com/s/6bgq8t6yextloqp/export.pkl?raw=1'
 export_file_name = 'export.pkl'
-model_file_url = 'https://www.dropbox.com/s/apu0seqcmuy6rpp/fine_tuned_enc.pth?raw=1'
-model_file_name = 'fine_tuned_enc.pth'
+data_file_url = 'https://www.dropbox.com/s/r8slnh3qc2bmvlj/data_lm.pkl?raw=1'
+data_file_name = 'data_lm.pkl'
 path = Path(__file__).parent
 
 
@@ -29,8 +29,11 @@ async def download_file(url, dest):
 
 async def setup_learner():
     await download_file(export_file_url, path / export_file_name)
+    await download_file(data_file_url, path / data_file_name)
+    data_lm = load_data(path, file='data_lm.pkl')
     try:
-        learn = load_learner(path, export_file_name)
+        model = load_learner(path, export_file_name)
+        learn = LanguageLearner(data_lm, model)
         return learn
     except RuntimeError as e:
         if len(e.args) > 0 and 'CPU-only machine' in e.args[0]:
