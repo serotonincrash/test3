@@ -57,6 +57,7 @@ async def homepage(request):
 @app.route('/analyze', methods=['POST'])
 async def analyze(request):
     req = await request.form()
+    print(req)
     prediction = req['enteredText']
     
     return JSONResponse({'result': prediction})
