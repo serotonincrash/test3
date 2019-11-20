@@ -14,6 +14,12 @@ export_file_name = 'fine_tuned_enc.pth'
 path = Path(__file__).parent
 export_file_url = "https://www.dropbox.com/s/apu0seqcmuy6rpp/fine_tuned_enc.pth?dl=1"
 
+class TempModel(nn.Module):
+    def __init__(self):
+        self.conv1 = nn.Conv2d(3, 5, (3, 3))
+    def forward(self, inp):
+        return self.conv1(inp)
+
 
 app = Starlette()
 app.add_middleware(CORSMiddleware, allow_origins=['*'], allow_headers=['X-Requested-With', 'Content-Type'])
@@ -30,7 +36,9 @@ async def download_file(url, dest):
 async def setup_learner():
     await download_file(export_file_url, path / export_file_name)
     try:
-        learn = torch.load(path / export_file_name, map_location='cpu')
+        learn = TempModel()
+        learn.load_state_dict(torch.load(path / export_file_name))
+        learn.eval()
         return learn
     except RuntimeError as e:
         if len(e.args) > 0 and 'CPU-only machine' in e.args[0]:
