@@ -34,8 +34,10 @@ async def setup_learner():
     await download_file(data_file_url, path / data_file_name)
     await download_file(model_file_url, path / model_file_name)
     data_lm = load_data(path, file='data_lm.pkl')
+    model = models.AWD_LSTM()
     try:
-        model = 
+        model = torch.load(path / model_file_name)
+        model.eval()
         learn = LanguageLearner(data_lm, model)
         return learn
     except RuntimeError as e:
