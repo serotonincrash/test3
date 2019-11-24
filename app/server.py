@@ -29,7 +29,7 @@ async def setup_learner():
     await download_file(data_file_url, path / data_file_name)
     data_lm = load_data(path, file='data_lm.pkl')
     try:
-        learn = language_model_learner(data_lm, AWD_LSTM, pretrained=URLs.WT103_FWD, drop_mult=0.5)
+        learn = language_model_learner(data_lm, AWD_LSTM, pretrained=URLs.WT103, drop_mult=0.5)
         learn.fit_one_cycle(4, 1e-1, moms=(0.8, 0.7))
         learn.fit_one_cycle(10, 9e-01, moms=(0.8, 0.7))
         learn.unfreeze()
