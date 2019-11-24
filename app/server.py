@@ -8,12 +8,8 @@ from starlette.applications import Starlette
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import HTMLResponse, JSONResponse
 from starlette.staticfiles import StaticFiles
-export_file_url = 'https://www.dropbox.com/s/6bgq8t6yextloqp/export.pkl?raw=1'
-export_file_name = 'export.pkl'
-data_file_url = 'https://www.dropbox.com/s/r8slnh3qc2bmvlj/data_lm.pkl?raw=1'
+data_file_url = 'https://www.dropbox.com/s/p2bqt5yrmievgts/data_lm.pkl?raw=1'
 data_file_name = 'data_lm.pkl'
-model_file_url = 'https://www.dropbox.com/s/x2tof9fa7mhspjo/fine_tuned_enc.pth?dl=1'
-model_file_name = 'fine_tuned_enc.pth'
 path = Path(__file__).parent
 
 
@@ -30,15 +26,16 @@ async def download_file(url, dest):
                 f.write(data)
 
 async def setup_learner():
-    await download_file(export_file_url, path / export_file_name)
     await download_file(data_file_url, path / data_file_name)
-    await download_file(model_file_url, path / model_file_name)
     data_lm = load_data(path, file='data_lm.pkl')
-    model = text.models.AWD_LSTM()
     try:
-        model = torch.load(path / model_file_name)
-        model.eval()
-        learn = LanguageLearner(data_lm, model)
+        learn = language_model_learner(data_lm, AWD_LSTM, pretrained=URLs.WT103_FWD, drop_mult=0.5)
+        learn.fit_one_cycle(4, 1e-1, moms=(0.8, 0.7))
+        learn.fit_one_cycle(10, 9e-01, moms=(0.8, 0.7))
+        learn.unfreeze()
+        learn.lr_find()
+        learn.recorder.plot(skip_end=15)
+        learn.fit_one_cycle(10, 1e-02, moms=(0.8, 0.7))
         return learn
     except RuntimeError as e:
         if len(e.args) > 0 and 'CPU-only machine' in e.args[0]:
