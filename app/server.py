@@ -30,12 +30,6 @@ async def setup_learner():
     data_lm = load_data(path, file='data_lm.pkl')
     try:
         learn = language_model_learner(data_lm, AWD_LSTM, pretrained=URLs.WT103, drop_mult=0.5)
-        learn.fit_one_cycle(4, 1e-1, moms=(0.8, 0.7))
-        learn.fit_one_cycle(10, 9e-01, moms=(0.8, 0.7))
-        learn.unfreeze()
-        learn.lr_find()
-        learn.recorder.plot(skip_end=15)
-        learn.fit_one_cycle(10, 1e-02, moms=(0.8, 0.7))
         return learn
     except RuntimeError as e:
         if len(e.args) > 0 and 'CPU-only machine' in e.args[0]:
